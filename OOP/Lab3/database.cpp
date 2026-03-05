@@ -4,74 +4,6 @@ using namespace std;
 
 const char* storage::filename = "data.bin";
 
-bool checkInt(char* buffer) {
-    for (int i = 0; i < strlen(buffer); i++) {
-        if (buffer[i] == 10) return true;
-        if (buffer[i] < 48 || buffer[i] > 57) return false;
-    }
-    return true;
-}
-
-bool checkDouble(char* buffer) {
-    int have_digit = 0;
-    int num_of_sep = 0;
-    for (int i = 0; i < strlen(buffer); i++) {
-        if (buffer[i] != 44 && buffer[i] != 10 && buffer[i] != 46 && (buffer[i] < 48 || buffer[i] > 57)) {
-            cout << "Incorrect number format.\n";
-            return false;
-        }
-        else if (buffer[i] < 58 && buffer[i] > 47) {
-            have_digit = 1;
-        }
-        else if (buffer[i] == 44 || buffer[i] == 46) {
-            num_of_sep++;
-        }
-    }
-    if (!have_digit || num_of_sep > 1 || (buffer[0] < 48 || buffer[0] > 57)) {
-        cout << "Incorrect number format.\n";
-        return false;
-    }
-    return true;
-}
-
-int readNumber() {
-    ifstream iFil(storage::filename, ios::binary);
-    if (!iFil) {
-        return 0;
-    }
-    int amount1=0;
-    iFil.read(reinterpret_cast<char*>(&amount1), sizeof(amount1));
-    if (iFil.eof()) {
-        iFil.close();
-        return 0;
-    }
-    iFil.close();
-    return amount1;
-}
-
-int enterNumber() {
-    char buff_n[80];
-    int amount = readNumber();
-    while (true) {
-        cout << "Write n: ";
-        cin >> buff_n;
-        if (!checkInt(buff_n)) {
-            cout << "Wrong.\n";
-        }
-        else if (atoi(buff_n) < amount) {
-            cout << "Too small.\n";
-        }
-        else if (atoi(buff_n) <= 0) {
-            cout << "Non positive.\n";
-        }
-        else {
-            break;
-        }
-        system("pause");
-    }
-    return atoi(buff_n);
-}
-
 void date::show() {
     cout << day << "." << month << "." << year;
 }
@@ -119,14 +51,14 @@ int item::init(char* name, int len, double price, int quant, int day, int month,
 
 int item::init() {
     char buf_name[80];
-    cout << "Name: ";
+    cout << "Enter name: ";
     cin >> buf_name;
 
     this->name = new char[strlen(buf_name) + 1];
     strcpy_s(this->name, strlen(buf_name) + 1, buf_name);
 
     char buf_price[80];
-    cout << "Price: ";
+    cout << "Enter price(number with float point): ";
     cin >> buf_price;
     if (!checkDouble(buf_price)) {
         this->price = 10.0;
@@ -136,38 +68,38 @@ int item::init() {
     }
 
     char buff_quant[80];
-    cout << "Quant: ";
+    cout << "Enter quantity(positive integer): ";
     cin >> buff_quant;
     if (!checkInt(buff_quant)) {
-        cout << "Incorrect number format.\n";
+        cout << "Not a positive integer.\n";
         this->quant = 1;
     }
     else {
         this->quant = atoi(buff_quant);
     }
     char buf_day[80];
-    cout << "Day: ";
+    cout << "Enter day of delivery: ";
     cin >> buf_day;
-    if (!checkInt(buf_day)) {
-        cout << "Incorrect number format.\n";
+    if (!checkInt(buf_day) || atoi(buf_day) < 1 || atoi(buf_day) > 31) {
+        cout << "Not a valid day.\n";
         this->delivery_date = date();
         return 1;
     }
     int day = atoi(buf_day);
     char buf_month[80];
-    cout << "Month: ";
+    cout << "Enter number of month of delivery(1-12): ";
     cin >> buf_month;
-    if (!checkInt(buf_month)) {
-        cout << "Incorrect number format.\n";
+    if (!checkInt(buf_month) || atoi(buf_month) < 1 || atoi(buf_month) > 12) {
+        cout << "Not a valid month.\n";
         this->delivery_date = date();
         return 1;
     }
     int month = atoi(buf_month);
     char buf_year[80];
-    cout << "Year: ";
+    cout << "Enter year of delivery: ";
     cin >> buf_year;
     if (!checkInt(buf_year)) {
-        cout << "Incorrect number format.\n";
+        cout << "Not a valid year.\n";
         this->delivery_date = date();
         return 1;
     }
@@ -230,14 +162,14 @@ storage::storage(int n) {
 
 void storage::searchName() {
     char buf_name[80];
-    cout << "Name: ";
+    cout << "Enter name to search: ";
     cin >> buf_name;
     for (int i = 0; i < current_count; i++) {
         if (this->database[i].showName(buf_name)) {
             return;
         }
     }
-    cout << "Not found.\n";
+    cout << "Not found any item with name " << buf_name << ".\n";
 }
     
 int storage::write_to_file() {
@@ -264,7 +196,7 @@ void storage::add() {
         this->current_count += this->database[current_count].init();
     }
     else {
-        cout << "No available space" << endl;
+        cout << "No available space in database." << endl;
     }
 }
 
@@ -276,10 +208,10 @@ void storage::show() {
 
 void storage::searchCost() {
     char buf_cost[80];
-    cout << "Cost: ";
+    cout << "Enter cost to search: ";
     cin >> buf_cost;
     if (!checkDouble(buf_cost)) {
-        cout << "Incorrect number format.\n";
+        cout << "Not a valid number.\n";
         return;
     }
     double cost = strtod(buf_cost, NULL);
@@ -290,7 +222,7 @@ void storage::searchCost() {
         }
     }
     if (!isFound) {
-        cout << "Not found.\n";
+        cout << "Not found any item with cost more than " << buf_cost << ".\n";
     }
 }
 
@@ -331,7 +263,7 @@ int storage::readfile() {
 }
 
 void storage::show_total() {
-    cout << "Total: " << this->current_count << endl;
+    cout << "Total amount of items: " << this->current_count << endl;
 }
 
 void storage::compare() {
@@ -360,7 +292,7 @@ void storage::compare() {
     cout << "Enter month to compare: ";
     char buf_month[80];
     cin >> buf_month;
-    if (!checkInt(buf_month)) {
+    if (!checkInt(buf_month) || atoi(buf_month) < 1 || atoi(buf_month) > 12) {
         cout << "Incorrect number format.\n";
         return;
     }
@@ -368,7 +300,7 @@ void storage::compare() {
     cout << "Enter day to compare: ";
     char buf_day[80];
     cin >> buf_day;
-    if (!checkInt(buf_day)) {
+    if (!checkInt(buf_day) || atoi(buf_day) < 1 || atoi(buf_day) > 31) {
         cout << "Incorrect number format.\n";
         return;
     }
@@ -390,12 +322,12 @@ storage* warehouse;
 
 void database() {
     int n = 0;
-    n = enterNumber();
+    n = enterNumber(storage::filename);
     warehouse = new storage(n);
     int read = (*warehouse).readfile();
     switch (read) {
     case 1: {
-        cout << "There is no file" << endl;
+        cout << "There is no such file" << endl;
         break;
     }
     case 2: {
@@ -403,7 +335,7 @@ void database() {
         break;
     }
     case 0: {
-        cout << "All corect" << endl;
+        cout << "All correct" << endl;
         break;
     }
     }
@@ -413,10 +345,10 @@ void database() {
     do {
         system("cls");
         choose = 1;
-        cout << "Choose(1 - add, 2 - show, 3 - total, 4 - find name, 5 - find more cost, 6 - compare): ";
+        cout << "Choose(1 - add new item, 2 - show all items, 3 - total amount of items, 4 - find item by name, 5 - find items with cost more than input, 6 - compare item to date): ";
         cin >> buffer;
         if (!checkInt(buffer)) {
-            printf("Incorrect!\n");
+            printf("Not a number!\n");
             continue;
         };
         choose = atoi(buffer);
@@ -454,7 +386,7 @@ void database() {
     int write = (*warehouse).write_to_file();
     switch (read) {
     case 1: {
-        cout << "Error openning file" << endl;
+        cout << "Error openning file to write, created new" << endl;
         break;
     }
     case 0: {

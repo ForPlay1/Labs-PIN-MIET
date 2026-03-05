@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include "functools.h"
 
 class item;
 
@@ -60,8 +61,4 @@ public:
     void show_total();
 };
 
-bool checkInt(char* buffer);
-bool checkDouble(char* buffer);
-int readNumber(const char* filename);
-int enterNumber();
 void database();
