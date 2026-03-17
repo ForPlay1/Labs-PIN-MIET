@@ -345,10 +345,19 @@ void database() {
     do {
         system("cls");
         choose = 1;
-        cout << "Choose(1 - add new item, 2 - show all items, 3 - total amount of items, 4 - find item by name, 5 - find items with cost more than input, 6 - compare item to date): ";
+        cout << "Choose a function to use to a warehouse:\n";
+        cout << "1 - add new item\n";
+        cout << "2 - show all items\n";
+        cout << "3 - total amount of items\n"; 
+        cout << "4 - find item by name\n";
+        cout << "5 - find items with cost more than input\n";
+        cout << "6 - compare item to date\n";
+        cout << "Other number - leave the programm and save to file\n";
+        cout << "Your choice: ";
         cin >> buffer;
         if (!checkInt(buffer)) {
             printf("Not a number!\n");
+            system("pause");
             continue;
         };
         choose = atoi(buffer);
@@ -381,6 +390,7 @@ void database() {
         }
     }
         system("pause");
+
     } while (choose > 0 && choose < 7);
 
     int write = (*warehouse).write_to_file();
