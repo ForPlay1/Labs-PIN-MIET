@@ -50,14 +50,23 @@ int readNumber(const char* filename) {
 int enterNumber(const char* filename) {
     char buff_n[80];
     int amount = readNumber(filename);
+    char b;
     while (true) {
         cout << "Write n: ";
-        cin >> buff_n;
+        cin.get(buff_n, 80);
+        cin.clear();
+        cin.get(b);
+        while (b != '\n') {
+            cin.get(b);
+        }
         if (!checkInt(buff_n)) {
             cout << "Wrong.\n";
         }
         else if (atoi(buff_n) < amount) {
             cout << "Too small.\n";
+        }
+        else if (atoi(buff_n) > 1000) {
+            cout << "Too big.\n";
         }
         else if (atoi(buff_n) <= 0) {
             cout << "Non positive.\n";

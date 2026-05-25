@@ -18,7 +18,6 @@ class date {
     int* getMonthPtr();
     int* getYearPtr();
     friend class food;
-    friend std::ostream& operator<<(std::ostream& os, const item& item);
 };
 
 class item {
@@ -27,13 +26,16 @@ class item {
     int quant;
 
 public:
+    item();
+    int init();
     bool isName(char* name);
     bool showName(char* name);
     char* getName();
+    virtual int getType();
     double getPrice();
     double* getPricePtr();
     bool isCostMore(double cost);
-    bool showCostMore(double cost);
+    virtual bool showCostMore(double cost);
     int* getQuantPtr();
     void setName(char* name);
     void setPrice(double price);
@@ -44,8 +46,11 @@ class food : public item {
     date delivery_date;
     
     public:
+    food();
     int init(char* name, int len, double price, int quant, int day, int month, int year);
     int init();
+    int getType() override;
+    bool showCostMore(double cost) override;
     date* getDeliveryDatePtr();
     bool operator>(const date& otherDate);
     friend std::ostream& operator<<(std::ostream& os, food& item);
@@ -56,16 +61,18 @@ class toy: public item {
     public:
     int init(char* name, int len, double price, int quant, int age_limit);
     int init();
+    int getType() override;
+    bool showCostMore(double cost) override;
     int getAgeLimit();
     int* getAgeLimitPtr();
     friend std::ostream& operator<<(std::ostream& os, toy& item);
 };
 
+class item12: public food, public toy{};
+
 class storage {
-    food* food_database;
-    toy* toy_database;
-    int current_count_food;
-    int current_count_toy;
+    item** database;
+    int current_count;
     int n;
 public:
     static const char* filename;

@@ -50,7 +50,7 @@ void item::setQuant(int quant) {
 }
 
 ostream& operator<<(ostream& os, food& food_item) {
-    return os << food_item.getName() << "  " << food_item.getPrice() << "  " << *(food_item.getQuantPtr()) << " " << *(food_item.getDeliveryDatePtr()->getDayPtr()) << "." << *(food_item.getDeliveryDatePtr()->getMonthPtr()) << "." << *(food_item.getDeliveryDatePtr()->getYearPtr());
+    return os << "Food: " << food_item.getName() << "  " << food_item.getPrice() << "  " << *(food_item.getQuantPtr()) << " " << *(food_item.getDeliveryDatePtr()->getDayPtr()) << "." << *(food_item.getDeliveryDatePtr()->getMonthPtr()) << "." << *(food_item.getDeliveryDatePtr()->getYearPtr());
 }
 
 int food::init(char* name, int len, double price, int quant, int day, int month, int year) {
@@ -62,13 +62,24 @@ int food::init(char* name, int len, double price, int quant, int day, int month,
 }
 
 int food::init() {
+    char b;
     char buf_init[80];
     cout << "Enter name: ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
 
     this->setName(buf_init);
     cout << "Enter price(number with float point): ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkDouble(buf_init)) {
         this->setPrice(10.0);
     }
@@ -77,7 +88,12 @@ int food::init() {
     }
 
     cout << "Enter quantity(positive integer): ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init)) {
         cout << "Not a positive integer.\n";
         this->setQuant(1);
@@ -86,7 +102,12 @@ int food::init() {
         this->setQuant(atoi(buf_init));
     }
     cout << "Enter day of delivery: ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init) || atoi(buf_init) < 1 || atoi(buf_init) > 31) {
         cout << "Not a valid day.\n";
         this->delivery_date = date();
@@ -94,7 +115,12 @@ int food::init() {
     }
     int day = atoi(buf_init);
     cout << "Enter number of month of delivery(1-12): ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init) || atoi(buf_init) < 1 || atoi(buf_init) > 12) {
         cout << "Not a valid month.\n";
         this->delivery_date = date();
@@ -102,7 +128,12 @@ int food::init() {
     }
     int month = atoi(buf_init);
     cout << "Enter year of delivery: ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init) || atoi(buf_init) < 1) {
         cout << "Not a valid year.\n";
         this->delivery_date = date();
@@ -127,14 +158,45 @@ int toy::init(char* name, int len, double price, int quant, int age_limit) {
     return 1;
 }
 
+int item::getType() {
+    return 0;
+}
+
+int food::getType() {
+    return 1;
+}
+
+food::food() {
+    cout << 2;
+}
+
+item::item() {
+    cout << 1;
+}
+
+int toy::getType() {
+    return 2;
+}
+
 int toy::init() {
+    char b;
     char buf_init[80];
     cout << "Enter name: ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
 
     this->setName(buf_init);
     cout << "Enter price(number with float point): ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkDouble(buf_init)) {
         this->setPrice(10.0);
     }
@@ -143,7 +205,12 @@ int toy::init() {
     }
 
     cout << "Enter quantity(positive integer): ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init)) {
         cout << "Not a positive integer.\n";
         this->setQuant(1);
@@ -152,7 +219,12 @@ int toy::init() {
         this->setQuant(atoi(buf_init));
     }
     cout << "Enter age limit: ";
-    cin >> buf_init;
+    cin.get(buf_init, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_init) || atoi(buf_init) < 0) {
         cout << "Not a valid age limit.\n";
         this->age_limit = 0;
@@ -167,7 +239,7 @@ int toy::getAgeLimit() {
 }
 
 std::ostream& operator<<(std::ostream& os, toy& item){
-    return os << item.getName() << "  " << item.getPrice() << "  " << *(item.getQuantPtr()) << " " << item.age_limit;
+    return os << "Toy: " << item.getName() << "  " << item.getPrice() << "  " << *(item.getQuantPtr()) << " " << item.age_limit;
 }
 
 bool item::isName(char* name) {
@@ -210,29 +282,44 @@ bool item::showCostMore(double cost) {
     return false;
 }
 
+bool food::showCostMore(double cost) {
+    if (isCostMore(cost)) {
+        cout << "Food: " << this->getName() << "  " << this->getPrice() << "  " << *(this->getQuantPtr()) << endl;
+        return true;
+    }
+    return false;
+}
+
+bool toy::showCostMore(double cost) {
+    if (isCostMore(cost)) {
+        cout << "Toy: " << this->getName() << "  " << this->getPrice() << "  " << *(this->getQuantPtr()) << endl;
+        return true;
+    }
+    return false;
+}
+
 int* item::getQuantPtr() {
     return &this->quant;
 }
 
 storage::storage(int n) {
-    this->food_database = new food[n];
-    this->toy_database = new toy[n];
-    this->current_count_food = 0;
-    this->current_count_toy = 0;
+    this->database = new item*[n];
+    this->current_count = 0;
     this->n = n;
 }
 
 void storage::searchName() {
     char buf_name[80];
+    char b;
     cout << "Enter name to search: ";
-    cin >> buf_name;
-    for (int i = 0; i < current_count_food; i++) {
-        if (this->food_database[i].showName(buf_name)) {
-            return;
-        }
+    cin.get(buf_name, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
     }
-    for (int i = 0; i < current_count_toy; i++) {
-        if (this->toy_database[i].showName(buf_name)) {
+    for (int i = 0; i < current_count; i++) {
+        if (this->database[i]->showName(buf_name)) {
             return;
         }
     }
@@ -244,44 +331,58 @@ int storage::write_to_file() {
     if (!outFile) {
         return 1;
     }
-    outFile.write(reinterpret_cast<char*>(&current_count_food), sizeof(current_count_food));
-    outFile.write(reinterpret_cast<char*>(&current_count_toy), sizeof(current_count_toy));
-    for (int i = 0; i < current_count_food; i++) {
-        int len = strlen(this->food_database[i].getName());
-        outFile.write(this->food_database[i].getName(), sizeof(char)*(len + 1));
-        outFile.write(reinterpret_cast<char*>(this->food_database[i].getPricePtr()), sizeof(double));
-        outFile.write(reinterpret_cast<char*>(this->food_database[i].getQuantPtr()), sizeof(int));
-        outFile.write(reinterpret_cast<char*>(this->food_database[i].getDeliveryDatePtr()->getDayPtr()), sizeof(int));
-        outFile.write(reinterpret_cast<char*>(this->food_database[i].getDeliveryDatePtr()->getMonthPtr()), sizeof(int));
-        outFile.write(reinterpret_cast<char*>(this->food_database[i].getDeliveryDatePtr()->getYearPtr()), sizeof(int));
-    }
-    for (int i = 0; i < current_count_toy; i++) {
-        int len = strlen(this->toy_database[i].getName());
-        outFile.write(this->toy_database[i].getName(), sizeof(char)*(len + 1));
-        outFile.write(reinterpret_cast<char*>(this->toy_database[i].getPricePtr()), sizeof(double));
-        outFile.write(reinterpret_cast<char*>(this->toy_database[i].getQuantPtr()), sizeof(int));
-        outFile.write(reinterpret_cast<char*>(this->toy_database[i].getAgeLimitPtr()), sizeof(int));
+    int type, len;
+    outFile.write(reinterpret_cast<char*>(&current_count), sizeof(current_count));
+    for (int i = 0; i < current_count; i++) {
+        type = this->database[i]->getType();
+        len = strlen(this->database[i]->getName());
+        outFile.write(this->database[i]->getName(), sizeof(char)*(len + 1));
+        outFile.write(reinterpret_cast<char*>(this->database[i]->getPricePtr()), sizeof(double));
+        outFile.write(reinterpret_cast<char*>(this->database[i]->getQuantPtr()), sizeof(int));
+        outFile.write(reinterpret_cast<char*>(&type), sizeof(int));
+        switch (type) {
+        case 1: {
+            outFile.write(reinterpret_cast<char*>(((food*)(this->database[i]))->getDeliveryDatePtr()->getDayPtr()), sizeof(int));
+            outFile.write(reinterpret_cast<char*>(((food*)(this->database[i]))->getDeliveryDatePtr()->getMonthPtr()), sizeof(int));
+            outFile.write(reinterpret_cast<char*>(((food*)(this->database[i]))->getDeliveryDatePtr()->getYearPtr()), sizeof(int));
+            break;
+        }
+        case 2:
+            int ageLim = ((toy*)(this->database[i]))->getAgeLimit();
+            outFile.write(reinterpret_cast<char*>(&ageLim), sizeof(int));
+            break;
+        }
     }
     outFile.close();
     return 0;
 }
 
 void storage::add() {
-    if (this->current_count_food + this->current_count_toy < this->n) {
+    if (this->current_count < this->n) {
+        char b;
         int type;
         char buf_type[80];
         cout << "Enter type of item to add(1 - food, 2 - toy): ";
-        cin >> buf_type;
+        cin.get(buf_type, 80);
+        cin.clear();
+        cin.get(b);
+        while (b != '\n') {
+            cin.get(b);
+        }
         if (!checkInt(buf_type) || (atoi(buf_type) != 1 && atoi(buf_type) != 2)) {
             cout << "Incorrect type.\n";
             return;
         }
         type = atoi(buf_type);
         if (type == 1) {
-            this->current_count_food += this->food_database[current_count_food].init();
+            this->database[current_count] = new food();
+            food* new_food = (food*)(this->database[current_count]);
+            this->current_count += new_food->init();
         }
         else {
-            this->current_count_toy += this->toy_database[current_count_toy].init();
+            this->database[current_count] = new toy();
+            toy* new_toy = (toy*)(this->database[current_count]);
+            this->current_count += new_toy->init();
         }
     }
     else {
@@ -290,33 +391,39 @@ void storage::add() {
 }
 
 void storage::show() {
-    cout << "Food items:\n";
-    for (int i = 0; i < current_count_food; i++) {
-        cout << this->food_database[i] << endl;
+    if (current_count > 0) {
+        for (int i = 0; i < current_count; i++) {
+            if (this->database[i]->getType() == 1) {
+                cout << *(food*)(this->database[i]) << endl;
+            }
+            else {
+                cout << *(toy*)(this->database[i]) << endl;
+            }
+        }
     }
-    cout << "Toy items:\n";
-    for (int i = 0; i < current_count_toy; i++) {
-        cout << this->toy_database[i] << endl;
+    else {
+        cout << "No items.\n";
     }
 }
 
 void storage::searchCost() {
     char buf_cost[80];
+    char b;
     cout << "Enter cost to search: ";
-    cin >> buf_cost;
+    cin.get(buf_cost, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkDouble(buf_cost)) {
         cout << "Not a valid number.\n";
         return;
     }
     double cost = strtod(buf_cost, NULL);
     bool isFound = false;
-    for (int i = 0; i < current_count_food; i++) {
-        if (this->food_database[i].showCostMore(cost)) {
-            isFound = true;
-        }
-    }
-    for (int i = 0; i < current_count_toy; i++) {
-        if (this->toy_database[i].showCostMore(cost)) {
+    for (int i = 0; i < current_count; i++) {
+        if (this->database[i]->showCostMore(cost)) {
             isFound = true;
         }
     }
@@ -330,16 +437,16 @@ int storage::readfile() {
     if (!inFile) {
         return 1;
     }
-    int amount_food, amount_toy;
-    inFile.read(reinterpret_cast<char*>(&amount_food), sizeof(amount_food));
-    inFile.read(reinterpret_cast<char*>(&amount_toy), sizeof(amount_toy));
+    int amount;
+    inFile.read(reinterpret_cast<char*>(&amount), sizeof(amount));
     if (inFile.eof()){
         inFile.close();
         return 2;
     }
-    for (int i = 0; i < amount_food; i++) {
+    for (int i = 0; i < amount; i++) {
         char* buff = new char[80];
         int len = 0;
+
         do {
             inFile.read(&(buff[len]), sizeof(char));
             len++;
@@ -350,59 +457,85 @@ int storage::readfile() {
         inFile.read(reinterpret_cast<char*>(&price), sizeof(double));
         int quant;
         inFile.read(reinterpret_cast<char*>(&quant), sizeof(int));
-        int day;
-        inFile.read(reinterpret_cast<char*>(&day), sizeof(int));
-        int month;
-        inFile.read(reinterpret_cast<char*>(&month), sizeof(int));
-        int year;
-        inFile.read(reinterpret_cast<char*>(&year), sizeof(int));
-        this->current_count_food += this->food_database[current_count_food].init(name, len, price, quant, day, month, year);
-    }
-    for (int i = 0; i < amount_toy; i++) {
-        char* buff = new char[80];
-        int len = 0;
-        do {
-            inFile.read(&(buff[len]), sizeof(char));
-            len++;
-        } while (buff[len - 1] != '\0');
-        char* name = new char[len];
-        strcpy_s(name, len, buff);
-        double price;
-        inFile.read(reinterpret_cast<char*>(&price), sizeof(double));
-        int quant;
-        inFile.read(reinterpret_cast<char*>(&quant), sizeof(int));
-        int age_limit;
-        inFile.read(reinterpret_cast<char*>(&age_limit), sizeof(int));
-        this->current_count_toy += this->toy_database[current_count_toy].init(name, len, price, quant, age_limit);
+        int type;
+        inFile.read(reinterpret_cast<char*>(&type), sizeof(int));
+        switch (type) {
+        case 1: {
+            int day, month, year;
+            inFile.read(reinterpret_cast<char*>(&day), sizeof(int));
+            inFile.read(reinterpret_cast<char*>(&month), sizeof(int));
+            inFile.read(reinterpret_cast<char*>(&year), sizeof(int));
+            food* new_food = new food;
+            this->current_count += new_food->init(name, len, price, quant, day, month, year);
+            this->database[this->current_count - 1] = new_food;
+            break;
+        }
+        case 2: {
+            int age_limit;
+            inFile.read(reinterpret_cast<char*>(&age_limit), sizeof(int));
+            toy* new_toy = new toy;
+            this->current_count += new_toy->init(name, len, price, quant, age_limit);
+            this->database[this->current_count - 1] = new_toy;
+            break;
+        }
+        }
     }
     inFile.close();
     return 0;
 }
 
 void storage::show_total() {
-    cout << "Total amount of items: " << this->current_count_food + this->current_count_toy << endl;
+    cout << "Total amount of items: " << this->current_count << endl;
 }
 
 void storage::compare() {
-    for (int i = 0; i < current_count_food; i++) {
-        cout << this->food_database[i] << endl;
+    for (int i = 0; i < current_count; i++) {
+        if (this->database[i]->getType() == 1)
+        cout << *(food*)(this->database[i]) << endl;
     }
     cout << "Enter, which item to compare(index, starts with 0): ";
     char buf_index[80];
-    cin >> buf_index;
+    char b;
+    cin.get(buf_index, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_index)) {
         cout << "Incorrect number format.\n";
         return;
     }
     int index = atoi(buf_index);
-    if (index < 0 || index >= current_count_food) {
+    if (index < 0 || index >= current_count) {
         cout << "Incorrect index.\n";
         return;
     }
-    food item_to_compare = this->food_database[index];
+    bool found = false;
+    int current_index = 0;
+    food item_to_compare;
+    for (int i = 0; i < current_count; i++) {
+        if (this->database[i]->getType() == 1) {
+            if (current_index == index) {
+                item_to_compare = *((food*)(this->database[i]));
+                found = true;
+                break;
+            }
+            current_index++;
+        }
+    }
+    if (!found) {
+        cout << "Not found such food.\n";
+        return;
+    }
     cout << "Enter year to compare: ";
     char buf_year[80];
-    cin >> buf_year;
+    cin.get(buf_year, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_year)) {
         cout << "Incorrect number format.\n";
         return;
@@ -410,7 +543,12 @@ void storage::compare() {
     int year = atoi(buf_year);
     cout << "Enter month to compare: ";
     char buf_month[80];
-    cin >> buf_month;
+    cin.get(buf_month, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_month) || atoi(buf_month) < 1 || atoi(buf_month) > 12) {
         cout << "Incorrect number format.\n";
         return;
@@ -418,7 +556,12 @@ void storage::compare() {
     int month = atoi(buf_month);
     cout << "Enter day to compare: ";
     char buf_day[80];
-    cin >> buf_day;
+    cin.get(buf_day, 80);
+    cin.clear();
+    cin.get(b);
+    while (b != '\n') {
+        cin.get(b);
+    }
     if (!checkInt(buf_day) || atoi(buf_day) < 1 || atoi(buf_day) > 31) {
         cout << "Incorrect number format.\n";
         return;
@@ -434,8 +577,7 @@ void storage::compare() {
 }
 
 storage::~storage() {
-    delete[] food_database;
-    delete[] toy_database;
+    delete[] database;
 }
 
 storage* warehouse;
@@ -445,6 +587,7 @@ void database() {
     n = enterNumber(storage::filename);
     warehouse = new storage(n);
     int read = (*warehouse).readfile();
+    char b;
     switch (read) {
     case 1: {
         cout << "There is no such file" << endl;
@@ -474,7 +617,12 @@ void database() {
         cout << "6 - compare item to date\n";
         cout << "Other number - leave the programm and save to file\n";
         cout << "Your choice: ";
-        cin >> buffer;
+        cin.get(buffer, 3);
+        cin.clear();
+        cin.get(b);
+        while (b != '\n') {
+            cin.get(b);
+        }
         if (!checkInt(buffer)) {
             printf("Not a number!\n");
             system("pause");
@@ -514,7 +662,7 @@ void database() {
     } while (choose > 0 && choose < 7);
 
     int write = (*warehouse).write_to_file();
-    switch (read) {
+    switch (write) {
     case 1: {
         cout << "Error openning file to write, created new" << endl;
         break;

@@ -1,257 +1,272 @@
-#include <iostream>
-#include <cstring>
-#include <stdexcept>
-using namespace std;
+#include "database.h"
 
-class fio{
-    char* name;
-    char* surname;
-public:
-    fio(const char* name, const char* surname){
-        this->name = new char[strlen(name) + 1];
-        this->surname = new char[strlen(surname) + 1];
-        strcpy(this->name, name);
-        strcpy(this->surname, surname);
-    }
-    ~fio(){
-        delete[] name;
-        delete[] surname;
-    }
-    friend ostream& operator<<(ostream& out, const fio& fio); 
-    fio() : name(nullptr), surname(nullptr) {}
-    fio(const fio& other){
-        name = new char[strlen(other.name) + 1];
-        surname = new char[strlen(other.surname) + 1];
-        strcpy(name, other.name);
-        strcpy(surname, other.surname);
-    }
-    char* getName() const {
-        char* buffer = new char[strlen(name) + 1];
-        strcpy(buffer, name);
-        return buffer;
-    }
-    char* getSurname() const {
-        char* buffer = new char[strlen(surname) + 1];
-        strcpy(buffer, surname);
-        return buffer;
-    }
-    void setName(const char* name){
-        delete[] this->name;
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-    }
-    void setSurname(const char* surname){
-        delete[] this->surname;
-        this->surname = new char[strlen(surname) + 1];
-        strcpy(this->surname, surname);
-    }
-};
+fio::fio(const char* name, const char* surname) {
+    this->name = new char[strlen(name) + 1];
+    this->surname = new char[strlen(surname) + 1];
+    strcpy_s(this->name, strlen(name)+1, name);
+    strcpy_s(this->surname, strlen(surname) + 1, surname);
+}
 
-ostream& operator<<(ostream& out, const fio& fio){
+fio::~fio() {
+    delete[] name;
+    delete[] surname;
+}
+
+fio::fio() : name(nullptr), surname(nullptr) {}
+
+fio::fio(const fio& other) {
+    name = new char[strlen(other.name) + 1];
+    surname = new char[strlen(other.surname) + 1];
+    strcpy_s(name, strlen(other.name) + 1, other.name);
+    strcpy_s(surname, strlen(other.surname) + 1, other.surname);
+}
+
+char* fio::getName() const {
+    char* buffer = new char[strlen(name) + 1];
+    strcpy_s(buffer, strlen(name) + 1, name);
+    return buffer;
+}
+    
+char* fio::getSurname() const {
+    char* buffer = new char[strlen(surname) + 1];
+    strcpy_s(buffer, strlen(surname) + 1, surname);
+    return buffer;
+}
+    
+void fio::setName(const char* name) {
+    delete[] this->name;
+    this->name = new char[strlen(name) + 1];
+    strcpy_s(this->name, strlen(name) + 1, name);
+}
+
+void fio::setSurname(const char* surname) {
+    delete[] this->surname;
+    this->surname = new char[strlen(surname) + 1];
+    strcpy_s(this->surname, strlen(surname) + 1, surname);
+}
+
+std::ostream& operator<<(std::ostream& out, const fio& fio) {
     return out << fio.name << " " << fio.surname;
 }
 
-class student{
-    fio man;
-    int zk;
-    int grup;
-    public:
-    student(){
-        man = fio();
-        zk = 0;
-        grup = 0;
-    }
-    void init(){
-        char name[50], surname[50];
-        cout << "Enter name: ";
-        cin >> name;
-        cout << "Enter surname: ";
-        cin >> surname;
-        man.setName(name);
-        man.setSurname(surname);
-        cout << "Enter zk: ";
-        cin >> zk;
-        cout << "Enter group: ";
-        cin >> grup;
-    }
-    friend ostream& operator<<(ostream& out, const student& student);
-    friend istream& operator>>(istream& in, student& student);
-    bool operator==(const fio& fio){
-        return strcmp(man.getName(), fio.getName()) == 0 && strcmp(man.getSurname(), fio.getSurname()) == 0;
-    }
-    friend student* search(student* students, int count, int grup);
-    int getGroup() const {
-        return grup;
-    }
-};
+student::student() {
+    man = fio();
+    zk = 0;
+    grup = 0;
+}
+void student::init() {
+    char name[50], surname[50];
+    std::cout << "Enter name: ";
+    std::cin >> name;
+    std::cout << "Enter surname: ";
+    std::cin >> surname;
+    man.setName(name);
+    man.setSurname(surname);
+    std::cout << "Enter zk: ";
+    std::cin >> zk;
+    std::cout << "Enter group: ";
+    std::cin >> grup;
+}
+bool student::operator==(const fio& fio) {
+    return strcmp(man.getName(), fio.getName()) == 0 && strcmp(man.getSurname(), fio.getSurname()) == 0;
+}
+int student::getGroup() const {
+    return grup;
+}
 
-student* search(student* students, int count, int grup){
+student* search(student* students, int count, int grup) {
     student* result = new student[count];
     int result_count = 0;
-    for (int i = 0; i < count; i++){
-        if (students[i].getGroup() == grup){
+    for (int i = 0; i < count; i++) {
+        if (students[i].getGroup() == grup) {
             result[result_count++] = students[i];
         }
     }
-    if (result_count == 0){
+    if (result_count == 0) {
         delete[] result;
         return nullptr;
     }
     return result;
 }
 
-ostream& operator<<(ostream& out, const student& student){
+std::ostream& operator<<(std::ostream& out, const student& student) {
     return out << student.man << " " << student.zk << " " << student.grup;
 }
 
-istream& operator>>(istream& in, student& student){
+std::istream& operator>>(std::istream& in, student& student) {
     char name[50], surname[50];
-    cout << "Enter name: ";
+    std::cout << "Enter name: ";
     in >> name;
-    cout << "Enter surname: ";
+    std::cout << "Enter surname: ";
     in >> surname;
     student.man.setName(name);
     student.man.setSurname(surname);
     char buf_zk[80];
-    cout << "Enter zk: ";
+    std::cout << "Enter zk: ";
     in >> buf_zk;
-    try{
-        student.zk = stoi(buf_zk);
+    try {
+        student.zk = atoi(buf_zk);
         if (student.zk < 0 || student.zk > 100) {
-            throw out_of_range("zk must be between 0 and 100.");
+            throw std::out_of_range("zk must be between 0 and 100.");
         }
-    } catch (invalid_argument& e){
-        cout << "Incorrect number format. Setting zk to 0." << endl;
-        student.zk = 0;
-    } catch (out_of_range& e){
-        cout << e.what() << " Setting zk to 0." << endl;
+    }
+    catch (std::invalid_argument& e) {
+        std::cout << "Incorrect number format. Setting zk to 0." << std::endl;
         student.zk = 0;
     }
-    
+    catch (std::out_of_range& e) {
+        std::cout << e.what() << " Setting zk to 0." << std::endl;
+        student.zk = 0;
+    }
+
     char buf_grup[80];
-    cout << "Enter group: ";
+    std::cout << "Enter group: ";
     in >> buf_grup;
-    try{
-        student.grup = stoi(buf_grup);
+    try {
+        student.grup = atoi(buf_grup);
         if (student.grup <= 0) {
-            throw out_of_range("Group number must be a positive integer.");
+            throw std::out_of_range("Group number must be a positive integer.");
         }
-    } catch (invalid_argument& e){
-        cout << "Incorrect number format. Setting group to 0." << endl;
+    }
+    catch (std::invalid_argument& e) {
+        std::cout << "Incorrect number format. Setting group to 0." << std::endl;
         student.grup = 0;
-    } catch (out_of_range& e){
-        cout << e.what() << " Setting group to 0." << endl;
+    }
+    catch (std::out_of_range& e) {
+        std::cout << e.what() << " Setting group to 0." << std::endl;
         student.grup = 0;
     }
     return in;
 }
 
-int main(){
+void database() {
     char buf_count[80];
-    cout << "Enter number of students: ";
-    cin >> buf_count;
+    std::cout << "Enter number of students: ";
+    std::cin >> buf_count;
     int count = 1;
+    throw 1;
     try {
-        count = stoi(buf_count);
+        count = atoi(buf_count);
         if (count <= 0) {
-            throw out_of_range("Number of students must be a positive integer.");
+            throw std::out_of_range("Number of students must be a positive integer.");
         }
-    } catch (invalid_argument& e){
-        cout << "Incorrect number format. Setting number of students to 1." << endl;
+
+    }
+    catch (std::invalid_argument& e) {
+        std::cout << "Incorrect number format. Setting number of students to 1." << std::endl;
         count = 1;
-        return 1;
-    } catch (out_of_range& e){
-        cout << e.what() << " Setting number of students to 1." << endl;
+    }
+    catch (std::out_of_range& e) {
+        std::cout << e.what() << " Setting number of students to 1." << std::endl;
         count = 1;
-        return 1;
-    }    
+    }
     system("pause");
     student* students = new student[count];
-    
+
     char buf_command[80];
     int command = 0;
-    do{
+    bool isWriten = false;
+    do {
         system("cls");
-        cout << "Choose a command:\n1 - Add students\n2 - Show all students\n3 - Find student by name and surname\n4 - Find students by group\nOther number - Exit\nYour choice: ";
-        cin >> buf_command;
+        std::cout << "Choose a command:\n1 - Add students\n2 - Show all students\n3 - Find student by name and surname\n4 - Find students by group\nOther number - Exit\nYour choice: ";
+        std::cin >> buf_command;
         try {
-            command = stoi(buf_command);
+            command = atoi(buf_command);
             if (command <= 0) {
-                throw out_of_range("Command must be a positive integer.");
+                throw std::out_of_range("Command must be a positive integer.");
             }
-        } catch (invalid_argument& e){
-            cout << "Incorrect number format." << endl;
-            command = 0;
-        } catch (out_of_range& e){
-            cout << e.what() << endl;
+        }
+        catch (std::invalid_argument& e) {
+            std::cout << "Incorrect number format." << std::endl;
             command = 0;
         }
-        system("pause");
+        catch (std::out_of_range& e) {
+            std::cout << e.what() << std::endl;
+            command = 0;
+        }
         system("cls");
         switch (command)
         {
         case 1:
-            for (int i = 0; i < count; i++){
-                cin >> students[i];
+            for (int i = 0; i < count; i++) {
+                std::cin >> students[i];
             }
+            isWriten = true;
             break;
         case 2:
-            for (int i = 0; i < count; i++){
-                cout << students[i] << endl;
+            if (!isWriten) {
+                std::cout << "No students" << std::endl;
+                break;
+            }
+            else {
+                for (int i = 0; i < count; i++) {
+                    std::cout << students[i] << std::endl;
+                }
             }
             break;
         case 3:
         {
+            if (!isWriten) {
+                std::cout << "No students" << std::endl;
+                break;
+            }
             char buff_name[50], buff_surname[50];
-            cout << "Enter name: ";
-            cin >> buff_name;
-            cout << "Enter surname: ";
-            cin >> buff_surname;
+            std::cout << "Enter name: ";
+            std::cin >> buff_name;
+            std::cout << "Enter surname: ";
+            std::cin >> buff_surname;
             fio search_fio(buff_name, buff_surname);
             bool found = false;
-            for (int i = 0; i < count; i++){
-                if (students[i] == search_fio){
-                    cout << students[i] << endl;
+            for (int i = 0; i < count; i++) {
+                if (students[i] == search_fio) {
+                    std::cout << students[i] << std::endl;
                     found = true;
                 }
             }
-            if (!found){
-                cout << "Student not found." << endl;
+            if (!found) {
+                std::cout << "Student not found." << std::endl;
             }
             break;
         }
         case 4:
         {
+            if (!isWriten) {
+                std::cout << "No students" << std::endl;
+                break;
+            }
             char buf_grup[80];
-            cout << "Enter group: ";
-            cin >> buf_grup;
+            std::cout << "Enter group: ";
+            std::cin >> buf_grup;
             int grup;
             try {
-                grup = stoi(buf_grup);
+                grup = atoi(buf_grup);
                 if (grup <= 0) {
-                    throw out_of_range("Group number must be a positive integer.");
+                    throw std::out_of_range("Group number must be a positive integer.");
                 }
-            } catch (invalid_argument& e){
-                cout << "Incorrect number format." << endl;
+            }
+            catch (std::invalid_argument& e) {
+                std::cout << "Incorrect number format." << std::endl;
                 break;
-            } catch (out_of_range& e){
-                cout << e.what() << endl;
+            }
+            catch (std::out_of_range& e) {
+                std::cout << e.what() << std::endl;
                 break;
             }
             student* grup_students = search(students, count, grup);
-            if (grup_students == nullptr){
-                cout << "No students found in this group." << endl;
-            } else {
-                for (int i = 0; i < count; i++){
-                    if (grup_students[i].getGroup() == grup){
-                        cout << grup_students[i] << endl;
+            if (grup_students == nullptr) {
+                std::cout << "No students found in this group." << std::endl;
+            }
+            else {
+                for (int i = 0; i < count; i++) {
+                    if (grup_students[i].getGroup() == grup) {
+                        std::cout << grup_students[i] << std::endl;
                     }
                 }
                 delete[] grup_students;
             }
             break;
         }
-    }
+        }
         system("pause");
     } while (command >= 0 && command <= 4);
     delete[] students;

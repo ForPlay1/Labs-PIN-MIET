@@ -33,7 +33,7 @@ void quickSort(double* arr, int size) {
     double pivot = arr[size - 1];
     int i = 0;
     for (int j = 0; j < size - 1; j++) {
-        if (arr[j] > pivot) { 
+        if (arr[j] > pivot) {
             swap(arr[i], arr[j]);
             i++;
         }
@@ -52,10 +52,10 @@ void printArray(num* arr, int size) {
     std::cout << std::endl;
 }
 
-void test(){
-    int* arr = new int[5]{5, 4, 3, 2, 1};
-    double* arr2 = new double[5]{5.5, 4.4, 3.3, 2.2, 1.1};
-    char* arr3 = new char[5]{'e', 'd', 'c', 'b', 'a'};
+void test() {
+    int* arr = new int[5] {5, 4, 3, 2, 1};
+    double* arr2 = new double[5] {5.5, 4.4, 3.3, 2.2, 1.1};
+    char* arr3 = new char[5] {'e', 'd', 'c', 'b', 'a'};
     quickSort(arr, 5);
     quickSort(arr2, 5);
     quickSort(arr3, 5);
